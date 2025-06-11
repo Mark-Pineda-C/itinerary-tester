@@ -1,4 +1,4 @@
-# test_kupos
+# kupos-peru-itinerary-tester
 
 ## Requisitos previos
 
@@ -19,6 +19,6 @@ bun start
 ## Estructura del proyecto
 
 - El código fuente se encuentra en la carpeta `./src`.
-- Los archivos de logs se almacenan en la carpeta `./logs`.
+- Los archivos de reporte se almacenan en la carpeta `./exports`.
 
 Este proyecto fue creado usando `bun init` en bun v1.2.5. [Bun](https://bun.sh) es un entorno de ejecución de JavaScript rápido todo en uno.
