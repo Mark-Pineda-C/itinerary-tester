@@ -1,69 +1,8 @@
-import { runner as ifacRunner } from "./src/ifac";
-import { runner as jaksaRunner } from "./src/jaksa";
-import { runner as quatrobusRunner } from "./src/quatrobus";
-import { runner as perubusRunner } from "./src/perubus";
+import runners from "./src";
+
 import moment from "moment";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
-
-const runners = {
-  ifac: ifacRunner,
-  jaksa: jaksaRunner,
-  quatrobus: quatrobusRunner,
-  perubus: perubusRunner, // TODO: Implementar
-};
-
-function checkConfig(integration: string) {
-  console.log(`🔍 Verificando configuración para ${integration}...`);
-
-  let id = integration.toUpperCase();
-
-  let variables = [];
-
-  switch (integration) {
-    case "ifac":
-      variables = [`${id}_BASE_URL`];
-      for (const variable of variables) {
-        if (!process.env[variable]) {
-          console.error(`❌ ${variable} no está definida`);
-          process.exit(1);
-        }
-      }
-      break;
-    case "jaksa":
-      variables = [`${id}_BASE_URL`, `${id}_USERNAME`, `${id}_PASSWORD`];
-      for (const variable of variables) {
-        if (!process.env[variable]) {
-          console.error(`❌ ${variable} no está definida`);
-          process.exit(1);
-        }
-      }
-      break;
-    case "quatrobus":
-      variables = [`${id}_BASE_URL`, `${id}_USERNAME`, `${id}_PASSWORD`];
-      for (const variable of variables) {
-        if (!process.env[variable]) {
-          console.error(`❌ ${variable} no está definida`);
-          process.exit(1);
-        }
-      }
-      break;
-    case "perubus":
-      variables = [`${id}_BASE_URL`, `${id}_USERNAME`, `${id}_PASSWORD`];
-      for (const variable of variables) {
-        if (!process.env[variable]) {
-          console.error(`❌ ${variable} no está definida`);
-          process.exit(1);
-        }
-      }
-      break;
-    default:
-      console.error("❌ Integración no implementada en este script");
-      process.exit(1);
-  }
-
-  console.log(`✅ Configuración correcta para ${integration}`);
-}
 
 const argv = yargs(hideBin(process.argv))
   .option("integrations", {
@@ -110,7 +49,11 @@ const argv = yargs(hideBin(process.argv))
 if (argv["list-available-integrations"]) {
   console.log("Integraciones disponibles:");
   for (const integration of Object.keys(runners)) {
-    console.log(`- ${integration}`);
+    console.log(
+      `- ${integration} ${
+        !runners[integration as keyof typeof runners].ready ? "[not-ready]" : ""
+      }`
+    );
   }
   process.exit(0);
 }
@@ -124,10 +67,10 @@ const startDate = argv.startDate;
 const endDate = argv.endDate;
 
 for (const integration of argv.integrations) {
-  checkConfig(integration);
+  runners[integration as keyof typeof runners].checkConfig();
   console.log("---------------------------------------------");
   console.log(`🚀 Iniciando prueba para ${integration}...`);
 
-  await runners[integration as keyof typeof runners](startDate, endDate);
+  await runners[integration as keyof typeof runners].runner(startDate, endDate);
   console.log("---------------------------------------------");
 }

@@ -7,6 +7,20 @@ const builder = new Builder({
   renderOpts: { pretty: true },
 });
 
+function checkConfig() {
+  const variables = [
+    "PERUBUS_BASE_URL",
+    "PERUBUS_USERNAME",
+    "PERUBUS_PASSWORD",
+  ];
+  for (const variable of variables) {
+    if (!process.env[variable]) {
+      console.error(`❌ ${variable} no está definida`);
+      process.exit(1);
+    }
+  }
+}
+
 const template = {
   "soapenv:Envelope": {
     $: {
@@ -24,7 +38,7 @@ const template = {
   },
 };
 
-export async function runner(startDate: moment.Moment, endDate: moment.Moment) {
+async function runner(startDate: moment.Moment, endDate: moment.Moment) {
   const BASE_URL = process.env.PERUBUS_BASE_URL as string;
   let dates = [];
   let dateiterator = startDate.clone();
@@ -269,3 +283,5 @@ export async function runner(startDate: moment.Moment, endDate: moment.Moment) {
 
   console.log("✅ DATA EXPORTED TO", excelFileName);
 }
+
+export default { runner, checkConfig, ready: true };

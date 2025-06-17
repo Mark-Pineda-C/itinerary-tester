@@ -1,5 +1,5 @@
 import moment from "moment";
-import { exporter, exportToXlsxBuffer, type FormattedData } from "./utils";
+import { exportToXlsxBuffer, type FormattedData } from "./utils";
 
 type RoutePair = {
   sourceName: string;
@@ -8,7 +8,17 @@ type RoutePair = {
   destinationId: number;
 };
 
-export async function runner(startDate: moment.Moment, endDate: moment.Moment) {
+function checkConfig() {
+  const variables = ["IFAC_BASE_URL"];
+  for (const variable of variables) {
+    if (!process.env[variable]) {
+      console.error(`❌ ${variable} no está definida`);
+      process.exit(1);
+    }
+  }
+}
+
+async function runner(startDate: moment.Moment, endDate: moment.Moment) {
   const BASE_URL = process.env.IFAC_BASE_URL;
   let dates = [];
   let dateiterator = startDate.clone();
@@ -109,3 +119,5 @@ export async function runner(startDate: moment.Moment, endDate: moment.Moment) {
 
   console.log("✅ DATA EXPORTED TO", excelFileName);
 }
+
+export default { runner, checkConfig, ready: true };

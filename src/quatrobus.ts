@@ -2,6 +2,20 @@ import moment from "moment";
 import { randomBytes } from "node:crypto";
 import { exportToXlsxBuffer, type FormattedData } from "./utils";
 
+function checkConfig() {
+  const variables = [
+    "QUATROBUS_BASE_URL",
+    "QUATROBUS_USERNAME",
+    "QUATROBUS_PASSWORD",
+  ];
+  for (const variable of variables) {
+    if (!process.env[variable]) {
+      console.error(`❌ ${variable} no está definida`);
+      process.exit(1);
+    }
+  }
+}
+
 function generateCID() {
   const longitud = 20;
   const caracteres =
@@ -18,7 +32,7 @@ function generateCID() {
   return resultado;
 }
 
-export async function runner(startDate: moment.Moment, endDate: moment.Moment) {
+async function runner(startDate: moment.Moment, endDate: moment.Moment) {
   const BASE_URL = process.env.QUATROBUS_BASE_URL;
   const U_NAME = process.env.QUATROBUS_USERNAME as string;
   const U_PASSWORD = process.env.QUATROBUS_PASSWORD as string;
@@ -194,3 +208,5 @@ export async function runner(startDate: moment.Moment, endDate: moment.Moment) {
 
   console.log("✅ DATA EXPORTED TO", excelFileName);
 }
+
+export default { runner, checkConfig, ready: true };

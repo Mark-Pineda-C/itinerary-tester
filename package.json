@@ -11,7 +11,8 @@
     "url": "https://github.com/Mark-Pineda-C/kupos-peru-itinerary-tester"
   },
   "scripts": {
-    "start": "bun index.ts"
+    "start": "bun index.ts",
+    "add-integration": "bun add-integration.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",
