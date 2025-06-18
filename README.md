@@ -1,5 +1,7 @@
 # kupos-peru-itinerary-tester
 
+[Ver documentación en ingles](README_en.md)
+
 ## Requisitos previos
 
 Debes instalar [Bun](https://bun.sh) antes de continuar. Puedes seguir las instrucciones oficiales en la [página de instalación de Bun](https://bun.sh/docs/installation).
