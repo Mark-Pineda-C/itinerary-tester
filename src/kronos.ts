@@ -13,15 +13,13 @@ function checkConfig() {
 
 function obtainPairs<T>(array: T[]): [T, T][] {
   const pairs: [T, T][] = [];
-
   for (let i = 0; i < array.length; i++) {
-    for (let j = i + 1; j < array.length; j++) {
+    for (let j = 0; j < array.length; j++) {
       if (i !== j) {
         pairs.push([array[i]!, array[j]!]);
       }
     }
   }
-
   return pairs;
 }
 
@@ -53,7 +51,8 @@ async function runner(startDate: moment.Moment, endDate: moment.Moment) {
   }
 
   const tokenResponseJson = await tokenResponse.json();
-  const token = (tokenResponseJson as any).idsesion;
+  // const token = (tokenResponseJson as any).idsesion;
+  const token = "fJvjIcYEwm";
 
   console.log("✅ TOKEN GENERATED");
 
@@ -108,15 +107,18 @@ async function runner(startDate: moment.Moment, endDate: moment.Moment) {
         console.log("  ❌ FAILED TO FETCH ITINERARIES:", itinerariesResponse);
         return;
       }
-
+      
       const itineraries = (await itinerariesResponse.json()) as any;
-
-      console.log(itineraryData, itineraries);
+      
+      if (!itineraries.viajes) {
+        console.log("  ❌ NO ITINERARIES FOUND");
+        continue;
+      }
 
       console.log(`  ✅ ${itineraries.viajes.length} ITINERARIES FOUND:`);
 
       for (const itinerary of itineraries.viajes) {
-        console.log("    📌 CHECKING ITINERARY:", itinerary.idviaje);
+        console.log("    📌 CHECKING ITINERARY:", itinerary.idcalendario);
         console.log("      ℹ️ INFO");
         console.log("         SERVICE:", itinerary.tipobus);
         console.log("         FARE:", itinerary.precio);
@@ -132,7 +134,7 @@ async function runner(startDate: moment.Moment, endDate: moment.Moment) {
             id: Number.parseInt(pair[1].idciudad),
             name: pair[1].ciudad,
           },
-          departureTime: itinerary.horaSalida,
+          departureTime: itinerary.horasalida,
           service: itinerary.tipobus,
           fares: {
             firstFloor: itinerary.precio,

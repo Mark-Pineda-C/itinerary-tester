@@ -111,7 +111,7 @@ async function runner(startDate: moment.Moment, endDate: moment.Moment) {
   console.log("EXPORTING DATA...");
 
   const xlsxBuffer = exportToXlsxBuffer(info);
-  const excelFileName = `./exports/ifac-itinerarios-${startDate.format(
+  const excelFileName = `./exports/ifac-itinerarios-${BASE_URL?.split("//")[1]?.split(".")[0]}-${startDate.format(
     "YYYY-MM-DD"
   )}-${endDate.format("YYYY-MM-DD")}.xlsx`;
   const archivo = Bun.file(excelFileName);

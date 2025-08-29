@@ -66,11 +66,33 @@ if (!argv.integrations) {
 const startDate = argv.startDate;
 const endDate = argv.endDate;
 
-for (const integration of argv.integrations) {
-  runners[integration as keyof typeof runners].checkConfig();
-  console.log("---------------------------------------------");
-  console.log(`🚀 Iniciando prueba para ${integration}...`);
+// Timer de ejecución
+const startTime = Date.now();
+console.log(`⏱️  Iniciando proceso a las ${new Date().toLocaleTimeString()}`);
 
-  await runners[integration as keyof typeof runners].runner(startDate, endDate);
-  console.log("---------------------------------------------");
+try{
+  for (const integration of argv.integrations) {
+    const integrationStartTime = Date.now();
+    runners[integration as keyof typeof runners].checkConfig();
+    console.log("---------------------------------------------");
+    console.log(`🚀 Iniciando prueba para ${integration}...`);
+  
+    await runners[integration as keyof typeof runners].runner(startDate, endDate);
+    
+    const integrationEndTime = Date.now();
+    const integrationDuration = (integrationEndTime - integrationStartTime) / 1000;
+    console.log(`✅ ${integration} completado en ${integrationDuration.toFixed(2)} segundos`);
+    console.log("---------------------------------------------");
+  }
+  
+  const endTime = Date.now();
+  const totalDuration = (endTime - startTime) / 1000;
+  console.log(`\n🎉 Proceso completado en ${totalDuration.toFixed(2)} segundos`);
+  console.log(`⏰ Finalizado a las ${new Date().toLocaleTimeString()}`);
+} catch (error) {
+  const endTime = Date.now();
+  const totalDuration = (endTime - startTime) / 1000;
+  console.error(`❌ Error después de ${totalDuration.toFixed(2)} segundos:`);
+  console.error(error);
+  process.exit(1);
 }
